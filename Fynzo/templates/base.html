@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Fynzo - Finance Management{% endblock %}</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+    {% block head %}{% endblock %}
+</head>
+<body class="bg-fynzo-bg text-fynzo-text font-sans antialiased flex h-screen overflow-hidden">
+    
+    {% include 'includes/sidebar.html' %}
+
+    <div class="flex-1 flex flex-col overflow-hidden relative">
+        {% include 'includes/nav.html' %}
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto p-6 bg-fynzo-bg">
+            {% block content %}
+            {% endblock %}
+        </main>
+        
+        {% include 'includes/footer.html' %}
+    </div>
+
+    {% include 'includes/toast.html' %}
+
+    <!-- Sidebar Toggle Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.getElementById('sidebarToggle');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    sidebar.classList.remove('-translate-x-full');
+                    if(overlay) overlay.classList.remove('hidden');
+                });
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', () => {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                });
+            }
+        });
+        
+        function toggleSubmenu(id) {
+            const el = document.getElementById('submenu-' + id);
+            const chevron = document.getElementById('chevron-' + id);
+            const menuBtn = document.getElementById('menu-btn-' + id);
+            
+            if (el) {
+                if (el.classList.contains('hidden')) {
+                    el.classList.remove('hidden');
+                    el.classList.add('flex');
+                    if(chevron) chevron.classList.add('rotate-180');
+                    if(menuBtn) {
+                        menuBtn.classList.add('bg-fynzo-highlight', 'text-white');
+                        menuBtn.classList.remove('text-gray-300', 'hover:bg-gray-800');
+                        // Make icon wrapper transparent
+                        menuBtn.querySelector('.icon-wrapper').classList.remove('bg-gray-800');
+                        menuBtn.querySelector('.icon-wrapper').classList.add('bg-transparent');
+                    }
+                } else {
+                    el.classList.add('hidden');
+                    el.classList.remove('flex');
+                    if(chevron) chevron.classList.remove('rotate-180');
+                    if(menuBtn) {
+                        menuBtn.classList.remove('bg-fynzo-highlight', 'text-white');
+                        menuBtn.classList.add('text-gray-300', 'hover:bg-gray-800');
+                        menuBtn.querySelector('.icon-wrapper').classList.add('bg-gray-800');
+                        menuBtn.querySelector('.icon-wrapper').classList.remove('bg-transparent');
+                    }
+                }
+            }
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

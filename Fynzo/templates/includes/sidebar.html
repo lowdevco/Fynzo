@@ -1,0 +1,71 @@
+<!-- Mobile Overlay -->
+<div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden lg:hidden"></div>
+
+<aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-72 bg-fynzo-panel border-r border-gray-800 transform -translate-x-full lg:translate-x-0 lg:static flex flex-col transition-transform duration-300 ease-in-out h-full">
+    <!-- Logo -->
+    <div class="h-20 flex items-center px-6 border-b border-transparent">
+        <a href="/" class="text-2xl font-bold text-white flex items-center gap-2">
+            Fynzo
+        </a>
+    </div>
+
+    <!-- Nav Links -->
+    <div class="flex-1 overflow-y-auto px-4 py-4 space-y-2 custom-scrollbar">
+        {% for item in nav_items %}
+            <div class="nav-item">
+                {% if item.children.exists %}
+                    <button id="menu-btn-{{ item.id }}" class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-colors text-gray-300 hover:bg-gray-800 focus:outline-none" onclick="toggleSubmenu({{ item.id }})">
+                        <div class="flex items-center gap-3">
+                            <div class="icon-wrapper w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center">
+                                {{ item.icon_svg|safe }}
+                            </div>
+                            <span class="font-medium text-sm">{{ item.title }}</span>
+                        </div>
+                        <svg id="chevron-{{ item.id }}" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    
+                    <div class="hidden flex-col pl-12 pr-4 py-2 space-y-3 relative mt-1" id="submenu-{{ item.id }}">
+                        <div class="absolute left-8 top-0 bottom-0 w-px bg-gray-700"></div>
+                        {% for child in item.children.all %}
+                            <a href="{% if child.url %}{{ child.url }}{% else %}#{% endif %}" class="block text-sm text-gray-400 hover:text-white transition-colors relative">
+                                <span class="absolute -left-[17px] top-1/2 w-3 h-px bg-gray-700"></span>
+                                {{ child.title }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <a href="{% if item.url %}{{ item.url }}{% else %}#{% endif %}" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors {% if request.path == item.url %}bg-fynzo-highlight text-white{% else %}text-gray-300 hover:bg-gray-800{% endif %}">
+                        <div class="icon-wrapper w-8 h-8 rounded-lg {% if request.path == item.url %}bg-transparent{% else %}bg-gray-800{% endif %} flex items-center justify-center">
+                            {{ item.icon_svg|safe }}
+                        </div>
+                        <span class="font-medium text-sm">{{ item.title }}</span>
+                    </a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Bottom Actions -->
+    <div class="p-4 border-t border-gray-800">
+        <div class="flex gap-2 mb-4">
+            <a href="#" class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg border border-gray-700 text-sm text-gray-300 hover:bg-gray-800 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 
+                Help
+            </a>
+            <a href="#" class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg border border-gray-700 text-sm text-gray-300 hover:bg-gray-800 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg> 
+                Sign out
+            </a>
+        </div>
+        <div class="flex items-center gap-3 bg-gray-800/40 p-3 rounded-xl border border-gray-700">
+            <div class="w-10 h-10 rounded-full bg-gray-700 overflow-hidden flex-shrink-0">
+                <img src="https://ui-avatars.com/api/?name={{ request.user.username|default:'Admin' }}&background=238636&color=fff" alt="avatar" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-white truncate">{{ request.user.username|default:"Muhammad Irfan" }}</p>
+                <p class="text-xs text-gray-400 truncate">{{ request.user.email|default:"admin@fynzo.com" }}</p>
+            </div>
+            <div class="w-2 h-2 rounded-full bg-green-500 flex-shrink-0"></div>
+        </div>
+    </div>
+</aside>

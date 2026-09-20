@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Fynzo{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold text-white">Dashboard</h1>
+        <button onclick="showToast('Data refreshed successfully!', 'success')" class="bg-fynzo-highlight hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors shadow-md">
+            Refresh Data
+        </button>
+    </div>
+
+    <!-- Dynamic Modules -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {% for module in modules %}
+            {% if module.module_type == 'stat_balance' %}
+            <div class="bg-fynzo-panel p-6 rounded-lg border border-gray-800 shadow-sm">
+                <h3 class="text-sm font-medium text-gray-400 mb-1">{{ module.title }}</h3>
+                <p class="text-2xl font-bold text-white">₹24,50,000.00</p>
+                {% for child in module.children.all %}
+                    <p class="text-xs text-gray-500 mt-2">{{ child.title }}</p>
+                {% endfor %}
+            </div>
+            {% elif module.module_type == 'stat_income' %}
+            <div class="bg-fynzo-panel p-6 rounded-lg border border-gray-800 shadow-sm">
+                <h3 class="text-sm font-medium text-gray-400 mb-1">{{ module.title }}</h3>
+                <p class="text-2xl font-bold text-green-400">+₹5,20,000.00</p>
+            </div>
+            {% elif module.module_type == 'stat_expense' %}
+            <div class="bg-fynzo-panel p-6 rounded-lg border border-gray-800 shadow-sm">
+                <h3 class="text-sm font-medium text-gray-400 mb-1">{{ module.title }}</h3>
+                <p class="text-2xl font-bold text-red-400">-₹1,85,000.00</p>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {% for module in modules %}
+            {% if module.module_type == 'chart_income_expense' %}
+            <div class="bg-fynzo-panel p-6 rounded-lg border border-gray-800 shadow-sm h-96 flex flex-col">
+                <h3 class="text-sm font-medium text-gray-400 mb-4">{{ module.title }}</h3>
+                <div class="flex-1 flex items-center justify-center text-gray-500">(ECharts placeholder)</div>
+            </div>
+            {% elif module.module_type == 'chart_spending_category' %}
+            <div class="bg-fynzo-panel p-6 rounded-lg border border-gray-800 shadow-sm h-96 flex flex-col">
+                <h3 class="text-sm font-medium text-gray-400 mb-4">{{ module.title }}</h3>
+                <div class="flex-1 flex items-center justify-center text-gray-500">(ECharts placeholder)</div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
